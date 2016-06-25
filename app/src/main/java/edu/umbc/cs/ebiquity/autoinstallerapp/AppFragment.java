@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +84,8 @@ public class AppFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             mAppDisplayType = getArguments().getString(AutoInstallerApplication.getAppDisplayTypeTag());
+        } else {
+            Log.d(AutoInstallerApplication.getDebugTag(),"Something is wrong");
         }
     }
 
@@ -155,29 +158,31 @@ public class AppFragment extends Fragment {
 //        Collections.sort(systemAppMetadataItems);
 //        appMetadataMap.clear();
 //
-        /**
-         * Data loading: get all user apps
-         */
-        getUserApps();
-
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-//            Log.d("MithrilAppManager", entry.toString());
-            userAppMetadataItems.add(entry.getValue());
-        }
-        Collections.sort(userAppMetadataItems);
-        appMetadataMap.clear();
+//        /**
+//         * Data loading: get all user apps
+//         */
+//        getUserApps();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            userAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(userAppMetadataItems);
+//        appMetadataMap.clear();
 
         /**
          * Data loading: get apps to install
          */
-//        getAppsToInstall();
-//
-//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-////            Log.d("MithrilAppManager", entry.toString());
-//            toInstallAppMetadataItems.add(entry.getValue());
-//        }
-//        Collections.sort(toInstallAppMetadataItems);
-//        appMetadataMap.clear();
+        getAppsToInstall();
+
+        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+//            Log.d("MithrilAppManager", entry.toString());
+            toInstallAppMetadataItems.add(entry.getValue());
+            Log.d(AutoInstallerApplication.getDebugTag(),entry.getValue().toString());
+        }
+        Log.d(AutoInstallerApplication.getDebugTag(),"Size is: "+Integer.toString(toInstallAppMetadataItems.size()));
+        Collections.sort(toInstallAppMetadataItems);
+        appMetadataMap.clear();
     }
 
     private void getAppsToInstall() {
@@ -186,11 +191,17 @@ public class AppFragment extends Fragment {
             JSONArray jsonArray = jsonRootObject.optJSONArray("applist");
             AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
             for(int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                tempAppMetaData.setPackageName(jsonObject.optString("packageName").toString());
-                tempAppMetaData.setAppName(jsonObject.optString("appName").toString());
-                tempAppMetaData.setVersionInfo(jsonObject.optString("versionInfo").toString());
-                tempAppMetaData.setIcon(getBitmap(jsonObject.optString("icon").toString()));
+                JSONObject apps = jsonArray.optJSONObject(i);
+                Iterator iter = apps.keys();
+                while(iter.hasNext()) {
+                    String key = (String) iter.next();
+                    JSONObject appInfo = apps.optJSONObject(key);
+                    tempAppMetaData.setPackageName(appInfo.optString("packageName").toString());
+                    tempAppMetaData.setAppName(appInfo.optString("appName").toString());
+                    tempAppMetaData.setVersionInfo(appInfo.optString("versionInfo").toString());
+//                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
+                }
+//                tempAppMetaData.setIcon(getBitmap(jsonObject.optString("icon").toString()));
             }
             appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
         } catch (JSONException exception) {
@@ -198,7 +209,7 @@ public class AppFragment extends Fragment {
         }
     }
 
-    private Bitmap getBitmap(String bitmapUrl) {
+    private Bitmap getBitmapFromURL(String bitmapUrl) {
         try {
             URL url = new URL(bitmapUrl);
             return BitmapFactory.decodeStream(url.openConnection().getInputStream());

@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.List;
 
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
 
@@ -20,7 +23,16 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
                    AppFragment.OnListFragmentInteractionListener {
 
-    private AppMetadata appMetadataItemSelected = null;
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
+    private AppMetadata appMetadataItemSelected = new AppMetadata("dummy");
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +42,10 @@ public class MainActivity extends AppCompatActivity
 
     private void initViews() {
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,50 +54,45 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         defaultFragmentLoad();
     }
 
     private void defaultFragmentLoad() {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new AppFragment())
-                .commit();
         loadToInstallAppsFragment();
     }
 
     private void loadAllAppsFragment() {
         Bundle data = new Bundle();
+        data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getAllAppsDisplayTag());
         loadFragment(data);
     }
 
     private void loadSystemAppsFragment() {
         Bundle data = new Bundle();
+        data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getSystemAppsDisplayTag());
         loadFragment(data);
     }
 
     private void loadUserAppsFragment() {
         Bundle data = new Bundle();
+        data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getUserAppsDisplayTag());
-        AppFragment aAppFragment = new AppFragment();
-        aAppFragment.setArguments(data);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, aAppFragment)
-                .commit();
-//        loadFragment(data);
+        loadFragment(data);
     }
 
     private void loadToInstallAppsFragment() {
         Bundle data = new Bundle();
+        data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getToInstallAppsDisplayTag());
         loadFragment(data);
     }
