@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Auto Installer App</string>
+    <string name="short_app_name">Installer</string>
+
+    <string name="app_icon_description">This is an app\'s icon</string>
+    <string name="app_name_placeholder_text">Some app</string>
+    <string name="app_version_placeholder_text">App\'s version</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
