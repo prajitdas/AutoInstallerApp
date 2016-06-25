@@ -1,6 +1,7 @@
 package edu.umbc.cs.ebiquity.autoinstallerapp;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
@@ -109,9 +110,9 @@ public class AppFragment extends Fragment {
      */
     private void initData() {
         /**
-         * Data loading: get all apps
+         * Data loading: get user apps
          */
-        getAllApps();
+        getUserApps();
 
         for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
@@ -127,6 +128,52 @@ public class AppFragment extends Fragment {
                 PackageManager.GET_PERMISSIONS;
         for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
             if ((pack.applicationInfo.flags) != 1) {
+                try {
+                    AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                    if (pack.packageName != null) {
+                        tempAppMetaData.setPackageName(pack.packageName);
+                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
+                        tempAppMetaData.setVersionInfo(pack.versionName);
+                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
+                    }
+                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private void getSystemApps() {
+        int flags = PackageManager.GET_META_DATA |
+                PackageManager.GET_SHARED_LIBRARY_FILES |
+                PackageManager.GET_PERMISSIONS;
+        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
+            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                try {
+                    AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                    if (pack.packageName != null) {
+                        tempAppMetaData.setPackageName(pack.packageName);
+                        tempAppMetaData.setAppName(pack.applicationInfo.loadLabel(packageManager).toString());
+                        tempAppMetaData.setVersionInfo(pack.versionName);
+                        tempAppMetaData.setIcon(((BitmapDrawable) pack.applicationInfo.loadIcon(packageManager)).getBitmap());
+                    }
+                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private void getUserApps() {
+        int flags = PackageManager.GET_META_DATA |
+                PackageManager.GET_SHARED_LIBRARY_FILES |
+                PackageManager.GET_PERMISSIONS;
+        for(PackageInfo pack : packageManager.getInstalledPackages(flags)) {
+            if ((pack.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1) {
                 try {
                     AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
                     if (pack.packageName != null) {
