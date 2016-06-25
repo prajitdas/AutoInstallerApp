@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -11,12 +13,20 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,9 +52,11 @@ public class AppFragment extends Fragment {
     private List<AppMetadata> allAppMetadataItems = new ArrayList<>();
     private List<AppMetadata> systemAppMetadataItems = new ArrayList<>();
     private List<AppMetadata> userAppMetadataItems = new ArrayList<>();
+    private List<AppMetadata> toInstallAppMetadataItems = new ArrayList<>();
     private Map<String, AppMetadata> appMetadataMap = new HashMap<>();
     private PackageManager packageManager;
     private View view;
+    private String mAppDisplayType;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -55,10 +67,11 @@ public class AppFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static AppFragment newInstance(int columnCount) {
+    public static AppFragment newInstance(int columnCount, String appDisplayType) {
         AppFragment fragment = new AppFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(AutoInstallerApplication.getAppDisplayTypeTag(), appDisplayType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +82,7 @@ public class AppFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mAppDisplayType = getArguments().getString(AutoInstallerApplication.getAppDisplayTypeTag());
         }
     }
 
@@ -94,6 +108,14 @@ public class AppFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
 
             recyclerView.setAdapter(new MyAppRecyclerViewAdapter(allAppMetadataItems, mListener));
+            if (mAppDisplayType.equals(AutoInstallerApplication.getAllAppsDisplayTag()))
+                recyclerView.setAdapter(new MyAppRecyclerViewAdapter(allAppMetadataItems, mListener));
+            else if (mAppDisplayType.equals(AutoInstallerApplication.getSystemAppsDisplayTag()))
+                recyclerView.setAdapter(new MyAppRecyclerViewAdapter(systemAppMetadataItems, mListener));
+            else if (mAppDisplayType.equals(AutoInstallerApplication.getUserAppsDisplayTag()))
+                recyclerView.setAdapter(new MyAppRecyclerViewAdapter(userAppMetadataItems, mListener));
+            else if (mAppDisplayType.equals(AutoInstallerApplication.getToInstallAppsDisplayTag()))
+                recyclerView.setAdapter(new MyAppRecyclerViewAdapter(toInstallAppMetadataItems, mListener));
 
             /**
              * Item decoration added
@@ -109,17 +131,81 @@ public class AppFragment extends Fragment {
      * Finds all the applications on the phone and stores them in a database accessible to the whole app
      */
     private void initData() {
+//        /**
+//         * Data loading: get all apps
+//         */
+//        getAllApps();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            allAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(allAppMetadataItems);
+//        appMetadataMap.clear();
+//
+//        /**
+//         * Data loading: get all system apps
+//         */
+//        getSystemApps();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            systemAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(systemAppMetadataItems);
+//        appMetadataMap.clear();
+//
         /**
-         * Data loading: get user apps
+         * Data loading: get all user apps
          */
         getUserApps();
 
         for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
-            allAppMetadataItems.add(entry.getValue());
+            userAppMetadataItems.add(entry.getValue());
         }
-        Collections.sort(allAppMetadataItems);
+        Collections.sort(userAppMetadataItems);
         appMetadataMap.clear();
+
+        /**
+         * Data loading: get apps to install
+         */
+//        getAppsToInstall();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            toInstallAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(toInstallAppMetadataItems);
+//        appMetadataMap.clear();
+    }
+
+    private void getAppsToInstall() {
+        try {
+            JSONObject jsonRootObject = new JSONObject(loadJSONFromAsset());
+            JSONArray jsonArray = jsonRootObject.optJSONArray("applist");
+            AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                tempAppMetaData.setPackageName(jsonObject.optString("packageName").toString());
+                tempAppMetaData.setAppName(jsonObject.optString("appName").toString());
+                tempAppMetaData.setVersionInfo(jsonObject.optString("versionInfo").toString());
+                tempAppMetaData.setIcon(getBitmap(jsonObject.optString("icon").toString()));
+            }
+            appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private Bitmap getBitmap(String bitmapUrl) {
+        try {
+            URL url = new URL(bitmapUrl);
+            return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     private void getAllApps() {
@@ -142,7 +228,6 @@ public class AppFragment extends Fragment {
                 }
             }
         }
-
     }
 
     private void getSystemApps() {
@@ -165,7 +250,6 @@ public class AppFragment extends Fragment {
                 }
             }
         }
-
     }
 
     private void getUserApps() {
@@ -188,7 +272,6 @@ public class AppFragment extends Fragment {
                 }
             }
         }
-
     }
 
     @Override
@@ -200,6 +283,22 @@ public class AppFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+    }
+
+    public String loadJSONFromAsset() {
+        String json = new String();
+        try {
+            InputStream inputStream = getActivity().getAssets().open("applist.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     @Override

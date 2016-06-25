@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initViews();
+    }
+
+    private void initViews() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -46,8 +50,52 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        defaultFragmentLoad();
+    }
+
+    private void defaultFragmentLoad() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.container, new AppFragment())
+                .commit();
+        loadToInstallAppsFragment();
+    }
+
+    private void loadAllAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getAllAppsDisplayTag());
+        loadFragment(data);
+    }
+
+    private void loadSystemAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getSystemAppsDisplayTag());
+        loadFragment(data);
+    }
+
+    private void loadUserAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getUserAppsDisplayTag());
+        AppFragment aAppFragment = new AppFragment();
+        aAppFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, aAppFragment)
+                .commit();
+//        loadFragment(data);
+    }
+
+    private void loadToInstallAppsFragment() {
+        Bundle data = new Bundle();
+        data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getToInstallAppsDisplayTag());
+        loadFragment(data);
+    }
+
+    private void loadFragment(Bundle data) {
+        AppFragment aAppFragment = new AppFragment();
+        aAppFragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, aAppFragment)
                 .commit();
     }
 
@@ -90,13 +138,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            loadAllAppsFragment();
         } else if (id == R.id.nav_gallery) {
-
+            loadSystemAppsFragment();
         } else if (id == R.id.nav_slideshow) {
-
+            loadUserAppsFragment();
         } else if (id == R.id.nav_manage) {
-
+            loadToInstallAppsFragment();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
