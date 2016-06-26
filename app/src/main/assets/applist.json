@@ -1,5 +1,6 @@
 {"applist":
   [
+    {"ABC":{"packageName":"ABC","appName":"ABC","versionInfo":"ABC","icon":"ABC"}},
     {"com.facebook.katana":{"packageName":"com.facebook.katana","appName":"Facebook","versionInfo":"1.0","icon":"https://lh3.googleusercontent.com/ZZPdzvlpK9r_Df9C3M7j1rNRi7hhHRvPhlklJ3lfi5jk86Jd1s0Y5wcQ1QgbVaAP5Q=w300-rw"}},
     {"com.facebook.orca":{"packageName":"com.facebook.orca","appName":"Messenger","versionInfo":"1.0","icon":"https://lh5.ggpht.com/0VYAvZLR9YhosF-thqm8xl8EWsCfrEY_uk2og2f59K8IOx5TfPsXjFVwxaHVnUbuEjc=w300-rw"}}
   ]

@@ -189,21 +189,21 @@ public class AppFragment extends Fragment {
         try {
             JSONObject jsonRootObject = new JSONObject(loadJSONFromAsset());
             JSONArray jsonArray = jsonRootObject.optJSONArray("applist");
-            AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
             for(int i = 0; i < jsonArray.length(); i++) {
                 JSONObject apps = jsonArray.optJSONObject(i);
                 Iterator iter = apps.keys();
+                AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
                 while(iter.hasNext()) {
                     String key = (String) iter.next();
                     JSONObject appInfo = apps.optJSONObject(key);
                     tempAppMetaData.setPackageName(appInfo.optString("packageName").toString());
                     tempAppMetaData.setAppName(appInfo.optString("appName").toString());
                     tempAppMetaData.setVersionInfo(appInfo.optString("versionInfo").toString());
-//                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
+                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
+//                    tempAppMetaData.setIcon(getBitmapFromURL(appInfo.optString("icon").toString()));
+                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
                 }
-//                tempAppMetaData.setIcon(getBitmap(jsonObject.optString("icon").toString()));
             }
-            appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
