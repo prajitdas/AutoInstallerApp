@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private AppMetadata appMetadataItemSelected = new AppMetadata("dummy");
     private FloatingActionButton fab;
+    private String fragmentBeingDisplayed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         Bundle data = new Bundle();
         data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getAllAppsDisplayTag());
+        fragmentBeingDisplayed = AutoInstallerApplication.getAllAppsDisplayTag();
         loadFragment(data);
     }
 
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         Bundle data = new Bundle();
         data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getSystemAppsDisplayTag());
+        fragmentBeingDisplayed = AutoInstallerApplication.getSystemAppsDisplayTag();
         loadFragment(data);
     }
 
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity
         Bundle data = new Bundle();
         data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getUserAppsDisplayTag());
+        fragmentBeingDisplayed = AutoInstallerApplication.getUserAppsDisplayTag();
         loadFragment(data);
     }
 
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity
         Bundle data = new Bundle();
         data.putInt(ARG_COLUMN_COUNT, mColumnCount);
         data.putString(AutoInstallerApplication.getAppDisplayTypeTag(), AutoInstallerApplication.getToInstallAppsDisplayTag());
+        fragmentBeingDisplayed = AutoInstallerApplication.getToInstallAppsDisplayTag();
         loadFragment(data);
     }
 
@@ -143,18 +149,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            loadAllAppsFragment();
+        if (id == R.id.nav_slideshow) {
+            loadToInstallAppsFragment();
+        } else if (id == R.id.nav_camera) {
+            loadUserAppsFragment();
         } else if (id == R.id.nav_gallery) {
             loadSystemAppsFragment();
-        } else if (id == R.id.nav_slideshow) {
-            loadUserAppsFragment();
         } else if (id == R.id.nav_manage) {
-            loadToInstallAppsFragment();
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            loadAllAppsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -167,8 +169,13 @@ public class MainActivity extends AppCompatActivity
         //TODO Do something with the item selected
         appMetadataItemSelected = item;
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("market://details?id="+appMetadataItemSelected.getPackageName()));
-        startActivity(intent);
+        if(fragmentBeingDisplayed == AutoInstallerApplication.getToInstallAppsDisplayTag()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("market://details?id="+appMetadataItemSelected.getPackageName()));
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"No actions have been defined for the current view", Toast.LENGTH_LONG).show();
+        }
     }
 }
