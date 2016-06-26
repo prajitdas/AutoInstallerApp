@@ -134,41 +134,41 @@ public class AppFragment extends Fragment {
      * Finds all the applications on the phone and stores them in a database accessible to the whole app
      */
     private void initData() {
-//        /**
-//         * Data loading: get all apps
-//         */
-//        getAllApps();
-//
-//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-////            Log.d("MithrilAppManager", entry.toString());
-//            allAppMetadataItems.add(entry.getValue());
-//        }
-//        Collections.sort(allAppMetadataItems);
-//        appMetadataMap.clear();
-//
-//        /**
-//         * Data loading: get all system apps
-//         */
-//        getSystemApps();
-//
-//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-////            Log.d("MithrilAppManager", entry.toString());
-//            systemAppMetadataItems.add(entry.getValue());
-//        }
-//        Collections.sort(systemAppMetadataItems);
-//        appMetadataMap.clear();
-//
-//        /**
-//         * Data loading: get all user apps
-//         */
-//        getUserApps();
-//
-//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-////            Log.d("MithrilAppManager", entry.toString());
-//            userAppMetadataItems.add(entry.getValue());
-//        }
-//        Collections.sort(userAppMetadataItems);
-//        appMetadataMap.clear();
+        /**
+         * Data loading: get all apps
+         */
+        getAllApps();
+
+        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+//            Log.d("MithrilAppManager", entry.toString());
+            allAppMetadataItems.add(entry.getValue());
+        }
+        Collections.sort(allAppMetadataItems);
+        appMetadataMap.clear();
+
+        /**
+         * Data loading: get all system apps
+         */
+        getSystemApps();
+
+        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+//            Log.d("MithrilAppManager", entry.toString());
+            systemAppMetadataItems.add(entry.getValue());
+        }
+        Collections.sort(systemAppMetadataItems);
+        appMetadataMap.clear();
+
+        /**
+         * Data loading: get all user apps
+         */
+        getUserApps();
+
+        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+//            Log.d("MithrilAppManager", entry.toString());
+            userAppMetadataItems.add(entry.getValue());
+        }
+        Collections.sort(userAppMetadataItems);
+        appMetadataMap.clear();
 
         /**
          * Data loading: get apps to install
