@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.autoinstallerapp;
+package edu.umbc.cs.ebiquity.autoinstallerapp.ui.activity;
 
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -25,7 +25,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
+import edu.umbc.cs.ebiquity.autoinstallerapp.AutoInstallerApplication;
+import edu.umbc.cs.ebiquity.autoinstallerapp.R;
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
+import edu.umbc.cs.ebiquity.autoinstallerapp.ui.fragment.AppFragment;
 import edu.umbc.cs.ebiquity.autoinstallerapp.util.VolleySingleton;
 
 public class MainActivity extends AppCompatActivity

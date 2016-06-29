@@ -1,4 +1,4 @@
-package edu.umbc.cs.ebiquity.autoinstallerapp;
+package edu.umbc.cs.ebiquity.autoinstallerapp.ui.misc;
 
 import android.content.Context;
 import android.content.res.TypedArray;

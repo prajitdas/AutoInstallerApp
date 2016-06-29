@@ -2,7 +2,7 @@ package edu.umbc.cs.ebiquity.autoinstallerapp.model;
 
 import android.graphics.Bitmap;
 
-import edu.umbc.cs.ebiquity.autoinstallerapp.AppFragment;
+import edu.umbc.cs.ebiquity.autoinstallerapp.ui.fragment.AppFragment;
 
 /**
 * Helper class for managing content

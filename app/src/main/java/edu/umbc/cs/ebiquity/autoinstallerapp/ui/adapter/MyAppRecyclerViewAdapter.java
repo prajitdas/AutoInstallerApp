@@ -1,16 +1,16 @@
-package edu.umbc.cs.ebiquity.autoinstallerapp;
+package edu.umbc.cs.ebiquity.autoinstallerapp.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
+import edu.umbc.cs.ebiquity.autoinstallerapp.R;
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
-import edu.umbc.cs.ebiquity.autoinstallerapp.AppFragment.OnListFragmentInteractionListener;
+import edu.umbc.cs.ebiquity.autoinstallerapp.ui.fragment.AppFragment.OnListFragmentInteractionListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link AppMetadata} and makes a call to the

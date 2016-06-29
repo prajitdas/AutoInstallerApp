@@ -1,11 +1,9 @@
-package edu.umbc.cs.ebiquity.autoinstallerapp;
+package edu.umbc.cs.ebiquity.autoinstallerapp.ui.fragment;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -17,29 +15,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import edu.umbc.cs.ebiquity.autoinstallerapp.AutoInstallerApplication;
+import edu.umbc.cs.ebiquity.autoinstallerapp.ui.misc.DividerItemDecoration;
+import edu.umbc.cs.ebiquity.autoinstallerapp.ui.adapter.MyAppRecyclerViewAdapter;
+import edu.umbc.cs.ebiquity.autoinstallerapp.R;
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
-import edu.umbc.cs.ebiquity.autoinstallerapp.util.VolleySingleton;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
