@@ -8,15 +8,15 @@
             android:title="@string/appsToInstallMenuString" />
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/account"
             android:title="@string/userApps" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/settings"
             android:title="@string/systemApps" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/content_save_all"
             android:title="@string/allApps" />
     </group>
 

@@ -17,15 +17,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.umbc.cs.ebiquity.autoinstallerapp.model.AppMetadata;
+import edu.umbc.cs.ebiquity.autoinstallerapp.util.VolleySingleton;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +71,7 @@ public class AppFragment extends Fragment {
     private PackageManager packageManager;
     private View view;
     private String mAppDisplayType;
+    private String json;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -84,6 +98,7 @@ public class AppFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             mAppDisplayType = getArguments().getString(AutoInstallerApplication.getAppDisplayTypeTag());
+            json = getArguments().getString("json");
         } else {
             Log.d(AutoInstallerApplication.getDebugTag(),"Something is wrong");
         }
@@ -134,45 +149,46 @@ public class AppFragment extends Fragment {
      * Finds all the applications on the phone and stores them in a database accessible to the whole app
      */
     private void initData() {
-        /**
-         * Data loading: get all apps
-         */
-        getAllApps();
-
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-//            Log.d("MithrilAppManager", entry.toString());
-            allAppMetadataItems.add(entry.getValue());
-        }
-        Collections.sort(allAppMetadataItems);
-        appMetadataMap.clear();
-
-        /**
-         * Data loading: get all system apps
-         */
-        getSystemApps();
-
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-//            Log.d("MithrilAppManager", entry.toString());
-            systemAppMetadataItems.add(entry.getValue());
-        }
-        Collections.sort(systemAppMetadataItems);
-        appMetadataMap.clear();
-
-        /**
-         * Data loading: get all user apps
-         */
-        getUserApps();
-
-        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
-//            Log.d("MithrilAppManager", entry.toString());
-            userAppMetadataItems.add(entry.getValue());
-        }
-        Collections.sort(userAppMetadataItems);
-        appMetadataMap.clear();
+//        /**
+//         * Data loading: get all apps
+//         */
+//        getAllApps();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            allAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(allAppMetadataItems);
+//        appMetadataMap.clear();
+//
+//        /**
+//         * Data loading: get all system apps
+//         */
+//        getSystemApps();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            systemAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(systemAppMetadataItems);
+//        appMetadataMap.clear();
+//
+//        /**
+//         * Data loading: get all user apps
+//         */
+//        getUserApps();
+//
+//        for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
+////            Log.d("MithrilAppManager", entry.toString());
+//            userAppMetadataItems.add(entry.getValue());
+//        }
+//        Collections.sort(userAppMetadataItems);
+//        appMetadataMap.clear();
 
         /**
          * Data loading: get apps to install
          */
+        // Access the RequestQueue through your singleton class.
         getAppsToInstall();
 
         for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
@@ -186,37 +202,45 @@ public class AppFragment extends Fragment {
     }
 
     private void getAppsToInstall() {
+        ImageLoader mImageLoader;
         try {
-            JSONObject jsonRootObject = new JSONObject(loadJSONFromAsset());
+            JSONObject jsonRootObject = new JSONObject(json);
             JSONArray jsonArray = jsonRootObject.optJSONArray("applist");
             for(int i = 0; i < jsonArray.length(); i++) {
                 JSONObject apps = jsonArray.optJSONObject(i);
                 Iterator iter = apps.keys();
-                AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                final AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
                 while(iter.hasNext()) {
                     String key = (String) iter.next();
                     JSONObject appInfo = apps.optJSONObject(key);
                     tempAppMetaData.setPackageName(appInfo.optString("packageName").toString());
                     tempAppMetaData.setAppName(appInfo.optString("appName").toString());
                     tempAppMetaData.setVersionInfo(appInfo.optString("versionInfo").toString());
-                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
-//                    tempAppMetaData.setIcon(getBitmapFromURL(appInfo.optString("icon").toString()));
+//                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
+
+                    // Get the ImageLoader through your singleton class.
+//                    mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+//
+//                    Log.d(AutoInstallerApplication.getDebugTag(), appInfo.optString("icon").toString());
+//                    mImageLoader.get(appInfo.optString("icon").toString(), new ImageLoader.ImageListener() {
+//                        @Override
+//                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+//                            Bitmap bitmap = response.getBitmap();
+//                            if (bitmap != null) {
+//                                tempAppMetaData.setIcon(bitmap);
+//                            }
+//                        }
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            Log.d(AutoInstallerApplication.getDebugTag(),"Error response"+error.getMessage());
+//                        }
+//                    });
                     appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
                 }
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
-    }
-
-    private Bitmap getBitmapFromURL(String bitmapUrl) {
-        try {
-            URL url = new URL(bitmapUrl);
-            return BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     private void getAllApps() {
@@ -294,22 +318,6 @@ public class AppFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
-    }
-
-    public String loadJSONFromAsset() {
-        String json = new String();
-        try {
-            InputStream inputStream = getActivity().getAssets().open("applist.json");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-            return null;
-        }
-        return json;
     }
 
     @Override

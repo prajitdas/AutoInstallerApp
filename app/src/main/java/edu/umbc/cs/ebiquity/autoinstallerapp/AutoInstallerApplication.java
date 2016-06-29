@@ -7,6 +7,7 @@ import android.app.Application;
  */
 
 public class AutoInstallerApplication extends Application {
+    private static final String url = "https://9b5d5f5d.ngrok.io";
     private static final String CONST_DEBUG_TAG = "AUTO_INSTALLER_APP_DEBUG_TAG";
     private static final String allAppsDisplayTag = "allAppsDisplayTag";
     private static final String userAppsDisplayTag = "userAppsDisplayTag";
@@ -36,5 +37,9 @@ public class AutoInstallerApplication extends Application {
 
     public static String getAppDisplayTypeTag() {
         return appDisplayTypeTag;
+    }
+
+    public static String getUrl() {
+        return url;
     }
 }

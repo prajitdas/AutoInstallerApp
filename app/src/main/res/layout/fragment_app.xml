@@ -15,48 +15,48 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/app_icon"
-                android:src="@drawable/android"
-                android:layout_width="60sp"
-                android:layout_height="60sp"
-                android:paddingLeft="5dp"
-                android:paddingStart="5dp"
-                android:paddingRight="5dp"
-                android:paddingEnd="5dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:contentDescription="@string/app_icon_description"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/app_icon"-->
+                <!--android:src="@drawable/android"-->
+                <!--android:layout_width="60sp"-->
+                <!--android:layout_height="60sp"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingStart="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:paddingEnd="5dp"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:contentDescription="@string/app_icon_description"/>-->
 
             <TextView
                 android:id="@+id/app_name"
                 android:text="@string/app_name_placeholder_text"
-                android:paddingLeft="5dp"
-                android:paddingStart="5dp"
-                android:paddingRight="5dp"
-                android:paddingEnd="5dp"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/app_icon"
-                android:layout_toEndOf="@id/app_icon"
                 android:textColor="@color/colorPrimaryDark"
-                android:textAppearance="@android:style/TextAppearance.Holo.Medium" />
+                android:textAppearance="@android:style/TextAppearance.Holo.Medium"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/app_version"
                 android:text="@string/app_version_placeholder_text"
-                android:paddingLeft="5dp"
-                android:paddingStart="5dp"
-                android:paddingRight="5dp"
-                android:paddingEnd="5dp"
+                android:paddingLeft="10dp"
+                android:paddingStart="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/app_name"
-                android:layout_toRightOf="@id/app_icon"
-                android:layout_toEndOf="@id/app_icon"
-                android:textAppearance="@android:style/TextAppearance.Holo.Small" />
+                android:textAppearance="@android:style/TextAppearance.Holo.Small"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true" />
 
             <!--CheckBox
                     android:id="@+id/app_selected"

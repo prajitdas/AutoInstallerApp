@@ -37,7 +37,7 @@ public class MyAppRecyclerViewAdapter extends RecyclerView.Adapter<MyAppRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mAppIcon.setImageBitmap(mValues.get(position).getIcon());
+//        holder.mAppIcon.setImageBitmap(mValues.get(position).getIcon());
         holder.mAppName.setText(mValues.get(position).getAppName());
         holder.mAppVersion.setText(mValues.get(position).getVersionInfo());
 
@@ -60,7 +60,7 @@ public class MyAppRecyclerViewAdapter extends RecyclerView.Adapter<MyAppRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final ImageView mAppIcon;
+//        public final ImageView mAppIcon;
         public final TextView mAppName;
         public final TextView mAppVersion;
         public AppMetadata mItem;
@@ -68,7 +68,7 @@ public class MyAppRecyclerViewAdapter extends RecyclerView.Adapter<MyAppRecycler
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mAppIcon = (ImageView) view.findViewById(R.id.app_icon);
+//            mAppIcon = (ImageView) view.findViewById(R.id.app_icon);
             mAppName = (TextView) view.findViewById(R.id.app_name);
             mAppVersion = (TextView) view.findViewById(R.id.app_version);
         }
