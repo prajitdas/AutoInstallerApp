@@ -182,7 +182,7 @@ public class AppFragment extends Fragment {
         for(Map.Entry<String, AppMetadata> entry : appMetadataMap.entrySet()) {
 //            Log.d("MithrilAppManager", entry.toString());
             toInstallAppMetadataItems.add(entry.getValue());
-            Log.d(AutoInstallerApplication.getDebugTag(),entry.getValue().toString());
+            Log.d(AutoInstallerApplication.getDebugTag(),entry.getKey().toString()+","+entry.getValue().toString());
         }
         Log.d(AutoInstallerApplication.getDebugTag(),"Size is: "+Integer.toString(toInstallAppMetadataItems.size()));
         Collections.sort(toInstallAppMetadataItems);
@@ -193,20 +193,17 @@ public class AppFragment extends Fragment {
         ImageLoader mImageLoader;
         try {
             JSONObject jsonRootObject = new JSONObject(json);
-            JSONArray jsonArray = jsonRootObject.optJSONArray("applist");
-            for(int i = 0; i < jsonArray.length(); i++) {
-                JSONObject apps = jsonArray.optJSONObject(i);
-                Iterator iter = apps.keys();
-                final AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
-                while(iter.hasNext()) {
-                    String key = (String) iter.next();
-                    JSONObject appInfo = apps.optJSONObject(key);
-                    tempAppMetaData.setPackageName(appInfo.optString("packageName").toString());
-                    tempAppMetaData.setAppName(appInfo.optString("appName").toString());
-                    tempAppMetaData.setVersionInfo(appInfo.optString("versionInfo").toString());
+            JSONArray applist = jsonRootObject.optJSONArray("applist");
+            for(int i = 0; i < applist.length(); i++) {
+                String appName = applist.getString(i);
+                Log.d(AutoInstallerApplication.getDebugTag(),appName);
+                AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
+                tempAppMetaData.setPackageName(appName);
+                tempAppMetaData.setAppName(appName);
+                tempAppMetaData.setVersionInfo("N/A");
 //                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
 
-                    // Get the ImageLoader through your singleton class.
+                // Get the ImageLoader through your singleton class.
 //                    mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
 //
 //                    Log.d(AutoInstallerApplication.getDebugTag(), appInfo.optString("icon").toString());
@@ -223,8 +220,7 @@ public class AppFragment extends Fragment {
 //                            Log.d(AutoInstallerApplication.getDebugTag(),"Error response"+error.getMessage());
 //                        }
 //                    });
-                    appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
-                }
+                appMetadataMap.put(tempAppMetaData.getPackageName(), tempAppMetaData);
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
