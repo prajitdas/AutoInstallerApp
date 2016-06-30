@@ -200,7 +200,7 @@ public class AppFragment extends Fragment {
                 AppMetadata tempAppMetaData = new AppMetadata("dummyApp");
                 tempAppMetaData.setPackageName(appName);
                 tempAppMetaData.setAppName(appName);
-                tempAppMetaData.setVersionInfo("N/A");
+//                tempAppMetaData.setVersionInfo("N/A");
 //                    tempAppMetaData.setIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.ic_launcher));
 
                 // Get the ImageLoader through your singleton class.

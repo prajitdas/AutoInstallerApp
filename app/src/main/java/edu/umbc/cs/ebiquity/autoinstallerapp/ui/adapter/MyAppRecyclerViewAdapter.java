@@ -39,7 +39,7 @@ public class MyAppRecyclerViewAdapter extends RecyclerView.Adapter<MyAppRecycler
         holder.mItem = mValues.get(position);
 //        holder.mAppIcon.setImageBitmap(mValues.get(position).getIcon());
         holder.mAppName.setText(mValues.get(position).getAppName());
-        holder.mAppVersion.setText(mValues.get(position).getVersionInfo());
+//        holder.mAppVersion.setText(mValues.get(position).getVersionInfo());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class MyAppRecyclerViewAdapter extends RecyclerView.Adapter<MyAppRecycler
         public final View mView;
 //        public final ImageView mAppIcon;
         public final TextView mAppName;
-        public final TextView mAppVersion;
+//        public final TextView mAppVersion;
         public AppMetadata mItem;
 
         public ViewHolder(View view) {
@@ -70,7 +70,7 @@ public class MyAppRecyclerViewAdapter extends RecyclerView.Adapter<MyAppRecycler
             mView = view;
 //            mAppIcon = (ImageView) view.findViewById(R.id.app_icon);
             mAppName = (TextView) view.findViewById(R.id.app_name);
-            mAppVersion = (TextView) view.findViewById(R.id.app_version);
+//            mAppVersion = (TextView) view.findViewById(R.id.app_version);
         }
 
         @Override
