@@ -53,6 +53,17 @@ public class MainActivity extends AppCompatActivity
         initViews();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        /**
+         * Get the json of list of apps to experiment with and display that list
+         */
+        loadJSONFromWebService();
+//        defaultFragmentLoad();
+    }
+
     private void initViews() {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,12 +86,6 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        /**
-         * Get the json of list of apps to experiment with and display that list
-         */
-        loadJSONFromWebService();
-//        defaultFragmentLoad();
     }
 
     private void defaultFragmentLoad() {
